@@ -1,0 +1,70 @@
+<!-- items/templates/items/item_detail.html -->
+{% extends 'items/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center py-4 mb-5">
+    <div class="col-lg-10">
+        
+        <!-- Back Button -->
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary rounded-pill mb-4" style="color: #aaa;">
+            &larr; Back to Dashboard
+        </a>
+
+        <!-- Main Detail Card -->
+        <div class="card bg-dark border-secondary border-opacity-25 shadow-lg overflow-hidden">
+            <div class="row g-0">
+                
+                <!-- Left Side: Large Image -->
+                <div class="col-md-6 bg-black d-flex align-items-center justify-content-center border-end border-secondary border-opacity-25">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" class="img-fluid" alt="{{ item.title }}" style="max-height: 600px; object-fit: contain;">
+                    {% else %}
+                        <div class="p-5 text-muted text-center">
+                            <h4>No Image Provided</h4>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Right Side: Details -->
+                <div class="col-md-6 d-flex flex-column">
+                    <div class="card-body p-4 p-lg-5">
+                        <div class="mb-3">
+                            <span class="badge {% if item.status == 'LOST' %}bg-danger{% else %}bg-success{% endif %} fs-6 me-2">
+                                {{ item.status }}
+                            </span>
+                            <span class="badge bg-secondary fs-6">{{ item.category }}</span>
+                        </div>
+                        
+                        <h1 class="card-title text-white fw-bold mb-4">{{ item.title }}</h1>
+                        
+                        <h5 class="text-secondary mb-2 fw-bold">Description</h5>
+                        <p class="card-text text-light mb-4" style="line-height: 1.7; font-size: 1.1rem;">
+                            {{ item.description }}
+                        </p>
+                        
+                        <hr class="border-secondary mb-4">
+                        
+                        <!-- Info Grid -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6">
+                                <strong class="text-secondary d-block mb-1">Location</strong>
+                                <span class="text-white">{{ item.location }}</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <strong class="text-secondary d-block mb-1">Date Reported</strong>
+                                <span class="text-white">{{ item.date_reported|date:"F d, Y" }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3 rounded mt-auto" style="background-color: rgba(0, 210, 137, 0.1); border: 1px solid rgba(0, 210, 137, 0.3);">
+                            <strong class="d-block mb-1" style="color: var(--neon-accent);">Contact to Claim / Return:</strong>
+                            <a href="mailto:{{ item.contact_email }}" class="text-white text-decoration-none fs-5">{{ item.contact_email }}</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

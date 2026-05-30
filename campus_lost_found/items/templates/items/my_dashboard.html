@@ -1,0 +1,64 @@
+<!-- items/templates/items/my_dashboard.html -->
+{% extends 'items/base.html' %}
+
+{% block content %}
+<div class="row mb-4 pt-3">
+    <div class="col-12">
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary rounded-pill mb-4" style="color: #aaa;">
+            &larr; Back to Main Feed
+        </a>
+        <h2 class="text-white fw-bold">My Reported Items</h2>
+        <p class="text-secondary">Manage the items you've reported. Don't forget to mark them as resolved once they are returned!</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    {% for item in items %}
+    <div class="col-md-6 col-lg-4">
+        <!-- The card fades slightly if it's claimed -->
+        <div class="card h-100 bg-dark border-secondary border-opacity-25 shadow-sm {% if item.status == 'CLAIMED' %}opacity-75{% endif %}">
+            
+            {% if item.image %}
+                <!-- Image turns grayscale if claimed -->
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}" style="height: 200px; object-fit: cover; {% if item.status == 'CLAIMED' %}filter: grayscale(100%);{% endif %}">
+            {% endif %}
+
+            <div class="card-body d-flex flex-column">
+                <div class="mb-2">
+                    <span class="badge {% if item.status == 'CLAIMED' %}bg-secondary{% elif item.status == 'LOST' %}bg-danger{% else %}bg-success{% endif %}">
+                        {{ item.status }}
+                    </span>
+                </div>
+                
+                <h5 class="card-title fw-bold {% if item.status == 'CLAIMED' %}text-secondary text-decoration-line-through{% else %}text-white{% endif %}">
+                    {{ item.title }}
+                </h5>
+                
+                <p class="card-text small flex-grow-1 {% if item.status == 'CLAIMED' %}text-secondary text-decoration-line-through{% else %}text-light{% endif %}">
+                    {{ item.description }}
+                </p>
+                
+                <hr class="border-secondary">
+                
+                {% if item.status != 'CLAIMED' %}
+                    <form method="POST" action="{% url 'mark_as_claimed' item.id %}" class="mt-auto">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-neon w-100">Mark as Claimed / Resolved</button>
+                    </form>
+                {% else %}
+                    <!-- Sleek resolved indicator -->
+                    <div class="mt-auto text-center p-2 rounded" style="background-color: rgba(255, 255, 255, 0.05);">
+                        <span style="color: var(--neon-accent); font-weight: 600;">✔ Item Resolved</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center text-secondary py-5">
+        <h4>You haven't reported any items yet.</h4>
+        <a href="{% url 'report_item' %}" class="btn btn-neon mt-3">Report an Item Now</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

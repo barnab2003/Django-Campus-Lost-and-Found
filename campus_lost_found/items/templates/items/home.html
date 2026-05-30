@@ -1,0 +1,78 @@
+<!-- items/templates/items/home.html -->
+{% extends 'items/base.html' %}
+
+{% block content %}
+<!-- Hero Section (Matches the large text area in your image) -->
+<div class="text-center py-5 mb-5">
+    <span class="badge-tag mb-3 d-inline-block text-uppercase">Campus Digital Hub</span>
+    <h1 class="display-4 fw-bold text-white mb-4">Elevate Your Campus<br>Recovery Experience</h1>
+    <p class="lead text-secondary mb-5 mx-auto" style="max-width: 600px;">
+        Lost a textbook or found someone's student ID? Connect with your peers instantly to report and recover misplaced belongings securely.
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+        <a href="{% url 'report_item' %}" class="btn btn-neon">Report an Item</a>
+        <a href="#items-section" class="btn btn-outline-neon">Browse Items</a>
+    </div>
+</div>
+
+<!-- Search Bar Area -->
+<div id="items-section" class="row justify-content-center mb-5">
+    <div class="col-md-8">
+        <form method="GET" action="{% url 'home' %}" class="d-flex gap-2 p-3 bg-dark rounded-pill border border-secondary border-opacity-25">
+            <input type="text" name="q" class="form-control bg-transparent border-0 text-white shadow-none ps-3" placeholder="Search for keys, headphones, books..." value="{{ request.GET.q|default_if_none:'' }}">
+            
+            <select name="status" class="form-select bg-dark text-white border-0 shadow-none w-auto">
+                <option value="">All</option>
+                <option value="LOST" {% if request.GET.status == 'LOST' %}selected{% endif %}>Lost</option>
+                <option value="FOUND" {% if request.GET.status == 'FOUND' %}selected{% endif %}>Found</option>
+            </select>
+            
+            <button type="submit" class="btn btn-neon rounded-pill px-4">Search</button>
+        </form>
+    </div>
+</div>
+
+<!-- Items Grid (Matches the bottom cards in your image) -->
+<div class="row g-4">
+    {% for item in items %}
+    <div class="col-md-4 col-sm-6">
+        <div class="card h-100 bg-dark border-secondary border-opacity-25 shadow-sm">
+            <!-- Image Area -->
+            {% if item.image %}
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span class="text-muted">No Image Available</span>
+                </div>
+            {% endif %}
+            
+            <!-- Card Content -->
+            <div class="card-body d-flex flex-column">
+                <div class="mb-2">
+                    <span class="badge {% if item.status == 'LOST' %}bg-danger{% else %}bg-success{% endif %}">
+                        {{ item.status }}
+                    </span>
+                    <small class="text-muted ms-2">{{ item.category }}</small>
+                </div>
+                
+                <h5 class="card-title text-white fw-bold">{{ item.title }}</h5>
+                <p class="card-text text-secondary small flex-grow-1">{{ item.description|truncatewords:15 }}</p>
+                
+                <hr class="border-secondary">
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted"><i class="bi bi-geo-alt"></i> {{ item.location }}</small>
+                    <small class="text-muted">{{ item.date_reported|date:"M d" }}</small>
+                </div>
+                <a href="{% url 'item_detail' item.id %}" target="_blank" class="btn btn-outline-neon w-100 mt-auto">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center text-secondary py-5">
+        <h4>No items found.</h4>
+        <p>Try adjusting your search filters or be the first to report an item.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

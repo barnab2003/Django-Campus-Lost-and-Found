@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Login</title></head>
+<body style="font-family: Arial; padding: 20px; max-width: 400px; margin: auto;">
+    <h2>Student Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="padding: 10px; background: #007bff; color: white; border: none;">Log In</button>
+    </form>
+    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
+</body>
+</html>

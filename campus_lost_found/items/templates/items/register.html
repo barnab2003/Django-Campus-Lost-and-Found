@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Register</title></head>
+<body style="font-family: Arial; padding: 20px; max-width: 400px; margin: auto;">
+    <h2>Student Registration</h2>
+    <p>You must use your official university email to join.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="padding: 10px; background: #28a745; color: white; border: none;">Register</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Log in here</a>.</p>
+</body>
+</html>
