@@ -1,14 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head><title>Register</title></head>
-<body style="font-family: Arial; padding: 20px; max-width: 400px; margin: auto;">
-    <h2>Student Registration</h2>
-    <p>You must use your official university email to join.</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" style="padding: 10px; background: #28a745; color: white; border: none;">Register</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Log in here</a>.</p>
-</body>
-</html>
+{% extends 'items/base.html' %}
+
+{% block content %}
+<style>
+    form input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1.5rem;
+        background-color: #212529;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.375rem;
+        color: white;
+    }
+    form input:focus {
+        outline: none;
+        border-color: var(--neon-accent);
+        box-shadow: 0 0 0 0.25rem rgba(0, 210, 137, 0.25);
+    }
+    form label { font-weight: 600; color: #ccc; }
+    .helptext { font-size: 0.85rem; color: #6c757d; display: block; margin-top: -1rem; margin-bottom: 1rem; }
+    .errorlist { color: #dc3545; list-style: none; padding-left: 0; margin-top: -1rem; margin-bottom: 1rem; font-size: 0.9rem;}
+</style>
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card bg-dark border-secondary border-opacity-25 shadow-lg">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-white">Join the Hub</h2>
+                    <p class="text-secondary">You must use an official university email.</p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-neon w-100 mt-2 py-2 fs-5">Register Account</button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-secondary mb-0">Already have an account? 
+                        <a href="{% url 'login' %}" style="color: var(--neon-accent); text-decoration: none; font-weight: 600;">Log in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
